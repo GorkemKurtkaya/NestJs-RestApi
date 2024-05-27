@@ -1,0 +1,37 @@
+// image-analysis.service.ts
+
+import { Injectable } from '@nestjs/common';
+import { ImageAnnotatorClient } from '@google-cloud/vision';
+
+process.env.GOOGLE_APPLICATION_CREDENTIALS = "C:\\Users\\Görkem\\vision_deneme\\secret-reactor-415208-49c4b6a1b8d8.json";
+@Injectable()
+export class ImageAnalysisService {
+  private client: ImageAnnotatorClient;
+  private likelihoodMapping = {
+    'VERY_UNLIKELY': '+',
+    'UNLIKELY': '++',
+    'POSSIBLE': '+++',
+    'LIKELY': '++++',
+    'VERY_LIKELY': '+++++'
+  };
+
+  constructor() {
+    this.client = new ImageAnnotatorClient();
+  }
+
+  async detectSafeSearch(uri: string): Promise<any> {
+    try {
+      const [result] = await this.client.safeSearchDetection(uri);
+      const detections = result.safeSearchAnnotation;
+      return {
+        adult: this.likelihoodMapping[detections.adult],
+        spoof: this.likelihoodMapping[detections.spoof],
+        medical: this.likelihoodMapping[detections.medical],
+        violence: this.likelihoodMapping[detections.violence],
+        racy: this.likelihoodMapping[detections.racy]
+      };
+    } catch (error) {
+      throw new Error('Error detecting safe search:' + error.message);
+    }
+  }
+}
