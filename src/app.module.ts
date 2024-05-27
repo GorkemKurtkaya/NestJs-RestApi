@@ -4,12 +4,10 @@ import { UserModule } from './user/user.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
-import { ImageAnalysisController } from './image-analysis-controller';
 import * as path from 'path';
 import { SafeSearchService } from './safe-search.service';
 import { TypeOrmModule } from '@nestjs/typeorm'; // TypeORM modülünü ekleyin
 import { YourEntity } from './your-entity.entity'; // Varlık sınıfınızı ekleyin
-import { TextAnalysisController } from './text-analysis';
 
 @Module({
   imports: [
@@ -29,7 +27,7 @@ import { TextAnalysisController } from './text-analysis';
       synchronize: true, // 
     }),
   ],
-  controllers:[ImageAnalysisController,TextAnalysisController],
+  controllers:[],
   providers: [SafeSearchService],
 })
 export class AppModule {
